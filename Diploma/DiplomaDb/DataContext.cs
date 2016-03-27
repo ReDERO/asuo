@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -17,6 +18,8 @@ namespace Diploma.DiplomaDb
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+
             modelBuilder.Entity<UserWishedSkill>().HasKey(u => new { u.SkillId, u.UserId });
 
             modelBuilder.Entity<User>()
@@ -203,6 +206,15 @@ namespace Diploma.DiplomaDb
             task.Skills.Add(skill5);
 
             context.SaveChanges();
+        }
+    }
+
+    public class Configuration : DbMigrationsConfiguration<DataContext>
+    {
+        public Configuration()
+        {
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
     }
 }

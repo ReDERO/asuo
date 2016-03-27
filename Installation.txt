@@ -1,0 +1,31 @@
+Инструкция по установке приложения на сервис AppHarbor.
+
+1. Откройте или создайте приложение ASP.NET MVC 5 в MS Visual Studio 2014.
+2. Выберите "Restore NuGet Packages", нажав по решению провой клавишей миши.
+3. Настройте приложение на синхронизацию с репозиторием на GitHub.
+
+ВНИМАНИЕ!!! Не заливайте на GitHub следующие папки и файлы:
+- _bin_deployableAssemblies\*
+- bin\*
+
+4. Создайте аккаунт на сайте www.appharbor.com.
+5. Перейдите на вкладку Your applications.
+6. Создайте новое приложение.
+7. Выберите загрузку приложения с GitHub.
+8. Выберите репозиторий, который содержит ваше приложение.
+
+************** ОШИБКИ ПРИ БИЛДЕ *************
+
+1.  Could not find a part of the path '*\bin\roslyn\csc.exe'.
+	- Добавте в файл проекта (*.csproj) следующие строки:
+
+  <PropertyGroup>
+    <PostBuildEvent>
+      if not exist "$(WebProjectOutputDir)\bin\Roslyn" md "$(WebProjectOutputDir)\bin\Roslyn"
+      start /MIN xcopy /s /y /R "$(OutDir)roslyn\*.*" "$(WebProjectOutputDir)\bin\Roslyn"
+    </PostBuildEvent>
+  </PropertyGroup>
+
+*********************************************
+
+9. Выполните настройку сервера так, как указано в следующей статье: https://blog.appharbor.com/2012/04/24/automatic-migrations-with-entity-framework-4-3.

@@ -17,7 +17,8 @@ namespace Diploma
     {
         protected void Application_Start()
         {
-            Database.SetInitializer<DataContext>(new DataContextInitilizer());
+            //Database.SetInitializer<DataContext>(new DataContextInitilizer());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

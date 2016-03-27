@@ -1,0 +1,50 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model IEnumerable<Diploma.Models.SkillPackageListItemViewModel>
+
+@{
+    ViewBag.Title = Resource.SkillPackages;
+}
+
+@Html.Breadcrumbs(new Diploma.Models.BreadCrumbsModel(Request.RequestContext, "skillPackages"))
+
+<h2>@ViewBag.Title</h2>
+<h4>@Resource.SkillPackagesDescription</h4>
+
+@if (ViewBag.AllowActions)
+{
+    <span class="pull-right additional">
+        <p>
+            @Html.ActionLink(Resource.AddNew, "Create")
+        </p>
+    </span>
+}
+else
+{
+    <br>
+}
+
+<table class="table">
+@foreach (var item in Model)
+{
+    <tr @switch (item.State)
+        {
+            case Diploma.Models.SkillPackageState.Done: @Html.Raw("class=\"done\""); break;
+            case Diploma.Models.SkillPackageState.InProgress: @Html.Raw("class=\"in-progress\""); break;
+        }
+        >
+        <td>
+            @Html.ActionLink(item.Caption, "Details", new { id = item.Id })
+        </td>
+        @if (ViewBag.AllowActions)
+        {
+        <td>
+            <span class="pull-right">
+                @Html.ActionLink(Resource.Edit, "Edit", new { id = item.Id }) |
+                @Html.ActionLink(Resource.Remove, "Delete", new { id = item.Id })
+            </span>
+        </td>
+        }
+    </tr>
+}
+</table>

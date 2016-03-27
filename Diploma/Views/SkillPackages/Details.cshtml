@@ -1,0 +1,82 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model Diploma.Models.SkillPackageDetailsViewModel
+
+@{
+    ViewBag.Title = Model.Caption;
+}
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>
+        @Resource.Author: @Html.ActionLink(Model.Author.FirstName + " " + Model.Author.LastName, "UserProfile", "Account", new { id = Model.Author.Id }, null)
+        @if (ViewBag.AllowActions)
+        {
+            <span class="pull-right additional">
+                @Html.ActionLink(Resource.Edit, "Edit", new { id = Model.Id }) |
+                @Html.ActionLink(Resource.Remove, "Delete", new { id = Model.Id })
+            </span>
+        }
+    </h4>
+    <hr />
+
+    <dl>
+        <dt>@Resource.Description</dt>
+        <dd>@Model.Description</dd>
+    </dl>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div>
+                <strong>@Diploma.Resources.Resource.Skills</strong>
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>",
+                            Diploma.Resources.Resource.Edit, "EditSkills", "Skills",
+                            new { entity = "skillPackage", objectId = Model.Id },
+                            htmlAttributes: new { data_modal = "", @class = "btn btn-warning pull-right btn-pencil" })
+            </div>
+        </div>
+        <table class="table table-hover">
+
+            @foreach (var item in Model.Skills)
+            {
+                <tr @if (((Diploma.Models.SkillListViewModel)ViewBag.AchievedSkills).Any(s => s.Id == item.Id)){ @Html.Raw("class=\"done\""); }>
+                    <td>
+                        <div class="truncated"><b>@item.Caption</b></div>
+                        <div class="truncated">@item.Description</div>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="container">
+        <div class="row">
+            @if (!ViewBag.Subscribed)
+            {
+                using (Html.BeginForm("Subscribe", "SkillPackages", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="pull-right">
+                        <input type="submit" value="@Resource.Subscribe" class="btn btn-success" />
+                    </div>
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("Unsubscribe", "SkillPackages", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="pull-right">
+                        <input type="submit" value="@Resource.Unsubscribe" class="btn btn-danger" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink(Resource.Back, "Index")
+</p>

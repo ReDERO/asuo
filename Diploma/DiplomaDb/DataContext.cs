@@ -18,8 +18,6 @@ namespace Diploma.DiplomaDb
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
-
             modelBuilder.Entity<UserWishedSkill>().HasKey(u => new { u.SkillId, u.UserId });
 
             modelBuilder.Entity<User>()

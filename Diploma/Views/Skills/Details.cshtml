@@ -1,0 +1,25 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model Diploma.Models.SkillListItemViewModel
+
+@{
+    ViewBag.Title = Model.Caption;
+}
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+@if (ViewBag.AllowActions)
+{
+    <span class="pull-right additional">
+        @Html.ActionLink(Resource.Edit, "Edit", new { id = Model.Id, returnURL = ViewBag.ReturnURL }) |
+        @Html.ActionLink(Resource.Remove, "Delete", new { id = Model.Id, returnURL = ViewBag.ReturnURL })
+    </span>
+}
+<div>
+    <hr />
+    @Model.Description
+</div>
+<p>
+    <a href="@ViewBag.ReturnURL">@Resource.Back</a>
+</p>

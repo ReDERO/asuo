@@ -1,0 +1,277 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model Diploma.Models.EditSkillsSkillsViewModel
+
+@{
+    ViewBag.Title = Resource.Skills;
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jplist")
+    @Styles.Render("~/Content/jplist")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $('document').ready(function () {
+        $('#demo').jplist({
+
+            itemsBox: '.list'
+           , itemPath: '.list-item'
+           , panelPath: '.jplist-panel'
+
+            //data source
+           , dataSource: {
+
+               type: 'server'
+              , server: {
+
+                  //ajax settings
+                  ajax: {
+                      url: '@Url.Action("ObjectSkills", "Skills", new { returnURL = HttpContext.Current.Request.Url.AbsoluteUri })'
+                     , dataType: 'html'
+                     , type: 'POST'
+                      , data: { entity : '@ViewBag.Entity', objectId : @ViewBag.ObjectId }
+                  }
+              }
+           }
+
+        });
+    });
+</script>
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+<h4>
+    @ViewBag.Description
+    <span class="pull-right" style="font-size:10.5pt">
+        @Html.ActionLink(Resource.AddNew, "Create", new { returnURL = HttpContext.Current.Request.Url.AbsoluteUri })
+    </span>
+</h4>
+<hr>
+<div class="container">
+    <div class="center">
+
+        <div class="box text-shadow">
+
+            <!-- jPList DEMO START -->
+            <div id="demo" class="box jplist">
+
+                <!-- ios button: show/hide panel -->
+                <div class="jplist-ios-button">
+                    <i class="fa fa-sort"></i>
+                    jPList Actions
+                </div>
+
+                <!-- panel -->
+                <div class="jplist-panel box panel-top row">
+
+                    <!-- reset button -->
+                    <button type="button"
+                            class="jplist-reset-btn"
+                            data-control-type="reset"
+                            data-control-name="reset"
+                            data-control-action="reset">
+                        @Resource.Reset &nbsp;<i class="fa fa-share"></i>
+                    </button>
+
+                    <!-- items per page dropdown -->
+                    <div class="jplist-drop-down"
+                         data-control-type="items-per-page-drop-down"
+                         data-control-name="paging"
+                         data-control-action="paging">
+
+                        <ul>
+                            <li><span data-number="3"> @Resource.PerPage3 </span></li>
+                            <li><span data-number="5"> @Resource.PerPage5 </span></li>
+                            <li><span data-number="10" data-default="true"> @Resource.PerPage10 </span></li>
+                            <li><span data-number="all"> @Resource.ViewAll </span></li>
+                        </ul>
+                    </div>
+
+                    <!-- sort dropdown -->
+                    <div class="jplist-drop-down"
+                         data-control-type="sort-drop-down"
+                         data-control-name="sort"
+                         data-control-action="sort">
+
+                        <ul>
+                            <li><span data-path="default">@Resource.SortBy</span></li>
+                            <li><span data-path=".caption" data-order="asc" data-type="text">@Resource.ByCaption A-Z</span></li>
+                            <li><span data-path=".caption" data-order="desc" data-type="text">@Resource.ByCaption Z-A</span></li>
+                            <li><span data-path=".desc" data-order="asc" data-type="text">@Resource.ByDescription A-Z</span></li>
+                            <li><span data-path=".desc" data-order="desc" data-type="text">@Resource.ByDescription Z-A</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- filter by caption -->
+                    <div class="text-filter-box">
+
+                        <!--[if lt IE 10]>
+                        <div class="jplist-label">Filter by Caption:</div>
+                        <![endif]-->
+
+                        <input data-path=".caption"
+                               data-button="#caption-search-button"
+                               type="text"
+                               value=""
+                               placeholder="@Resource.SearchByCaption"
+                               data-control-type="textbox"
+                               data-control-name="caption-filter"
+                               data-control-action="filter" />
+
+                        <button type="button"
+                                id="caption-search-button">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
+
+                    <!-- filter by description -->
+                    <div class="text-filter-box">
+
+                        <!--[if lt IE 10]>
+                        <div class="jplist-label">Filter by Description:</div>
+                        <![endif]-->
+
+                        <input data-path=".desc"
+                               data-button="#desc-search-button"
+                               type="text"
+                               value=""
+                               placeholder="@Resource.SearchByDescription"
+                               data-control-type="textbox"
+                               data-control-name="desc-filter"
+                               data-control-action="filter" />
+
+                        <button type="button"
+                                id="desc-search-button">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter by subject -->
+                    <div class="jplist-drop-down"
+                         data-control-type="filter-drop-down"
+                         data-control-name="subject-filter"
+                         data-control-action="filter">
+                        <ul>
+                            <li><span data-path="default">@Resource.Subject</span></li>
+                            @foreach (Diploma.Models.SubjectListItemViewModel subject in ViewBag.Subjects)
+                            {
+                                <li><span data-path="@subject.Id">@subject.Caption</span></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Filter by topic -->
+                    <div class="jplist-drop-down"
+                         data-control-type="filter-drop-down"
+                         data-control-name="topic-filter"
+                         data-control-action="filter">
+                        <ul>
+                            <li><span data-path="default">@Resource.Topic</span></li>
+                            @foreach (Diploma.Models.TopicListItemViewModel topic in ViewBag.Topics)
+                            {
+                                <li><span data-path="@topic.Id">@topic.Caption</span></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- pagination results -->
+                    <div class="jplist-label"
+                         data-type="@Resource.Page {current} @Resource.of {pages}"
+                         data-control-type="pagination-info"
+                         data-control-name="paging"
+                         data-control-action="paging">
+                    </div>
+
+                    <!-- pagination -->
+                    <div class="jplist-pagination"
+                         data-control-type="pagination"
+                         data-control-name="paging"
+                         data-control-action="paging">
+                    </div>
+
+                    <!-- preloader for data sources -->
+                    <div class="jplist-hide-preloader jplist-preloader"
+                         data-control-type="preloader"
+                         data-control-name="preloader"
+                         data-control-action="preloader">
+                        <img src="/content/ajax-loader-line.gif" alt="Loading..." title="Loading..." />
+                    </div>
+
+                </div>
+
+                <br>
+                <!-- ajax content here -->
+                <div class="list"></div>
+
+                <!-- no result found -->
+                <div class="box jplist-no-results text-shadow align-center jplist-hidden">
+                    <p>@Resource.NoResultsFound</p>
+                </div>
+                <br>
+
+                <!-- ios button: show/hide panel -->
+                <div class="jplist-ios-button">
+                    <i class="fa fa-sort"></i>
+                    jPList Actions
+                </div>
+
+                <!-- panel -->
+                <div class="jplist-panel box panel-bottom row">
+
+                    <!-- items per pafe dropdown -->
+                    <div class="jplist-drop-down left"
+                         data-control-type="items-per-page-drop-down"
+                         data-control-name="paging"
+                         data-control-action="paging"
+                         data-control-animate-to-top="true">
+
+                        <ul>
+                            <li><span data-number="3"> @Resource.PerPage3 </span></li>
+                            <li><span data-number="5"> @Resource.PerPage5 </span></li>
+                            <li><span data-number="10" data-default="true"> @Resource.PerPage10 </span></li>
+                            <li><span data-number="all"> @Resource.ViewAll </span></li>
+                        </ul>
+                    </div>
+
+                    <!-- sort dropdown -->
+                    <div class="jplist-drop-down left"
+                         data-control-type="sort-drop-down"
+                         data-control-name="sort"
+                         data-control-action="sort"
+                         data-control-animate-to-top="true">
+
+                        <ul>
+                            <li><span data-path="default">@Resource.SortBy</span></li>
+                            <li><span data-path=".caption" data-order="asc" data-type="text">@Resource.ByCaption A-Z</span></li>
+                            <li><span data-path=".caption" data-order="desc" data-type="text">@Resource.ByCaption Z-A</span></li>
+                            <li><span data-path=".desc" data-order="asc" data-type="text">@Resource.ByDescription A-Z</span></li>
+                            <li><span data-path=".desc" data-order="desc" data-type="text">@Resource.ByDescription Z-A</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- pagination results -->
+                    <div class="jplist-label"
+                         data-type="{start} - {end} @Resource.of {all}"
+                         data-control-type="pagination-info"
+                         data-control-name="paging"
+                         data-control-action="paging">
+                    </div>
+
+                    <!-- pagination -->
+                    <div class="jplist-pagination"
+                         data-control-type="pagination"
+                         data-control-name="paging"
+                         data-control-action="paging"
+                         data-control-animate-to-top="true">
+                    </div>
+                </div>
+            </div>
+            <!-- jPList DEMO END -->
+
+        </div>
+
+    </div>
+</div>

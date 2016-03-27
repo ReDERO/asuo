@@ -1,0 +1,44 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model IEnumerable<Diploma.Models.TaskListItemViewModel>
+
+@{
+    ViewBag.Title = ViewBag.BreadCrumbs[0].Caption + ":" + Resource.Tasks;
+}
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+
+@if (ViewBag.AllowActions)
+{
+    <span class="pull-right">
+        <p>@Html.ActionLink(Resource.AddNew, "Create", new { id = ViewBag.TopicId })</p>
+    </span>
+}
+else
+{
+    <br>
+}
+
+<table class="table">
+
+@foreach (var item in Model)
+{
+    <tr @((item.IsCompleted) ? "class=done" : "")>
+        <td>
+            @Html.ActionLink(item.Caption, "Details", new { id = item.Id })
+        </td>
+        @if (ViewBag.AllowActions)
+        {
+            <td>
+                <span class="pull-right">
+                    @Html.ActionLink(Resource.Edit, "Edit", new { id = item.Id }) |
+                    @Html.ActionLink(Resource.Remove, "Delete", new { id = item.Id })
+                </span>
+            </td>
+        }
+    </tr>
+}
+
+</table>

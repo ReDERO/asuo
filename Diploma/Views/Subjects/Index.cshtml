@@ -1,0 +1,44 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model Diploma.Models.SubjectList
+
+@{
+    ViewBag.Title = Resource.Subjects;
+}
+
+@Html.Breadcrumbs(new Diploma.Models.BreadCrumbsModel(Request.RequestContext, "subjects"))
+
+<h2>@ViewBag.Title</h2>
+
+@if(ViewBag.IsAllowed)
+{
+    <span class="pull-right">
+        <p>
+            @Html.ActionLink(Resource.AddNew, "Create")
+        </p>
+    </span>
+}
+else
+{
+    <br>
+}
+<table class="table">
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Caption, "Index", "Topics", new { id = item.Id }, null)
+        </td>
+        @if (ViewBag.IsAllowed)
+        {
+        <td>
+            <span class="pull-right">
+                @Html.ActionLink(Resource.Edit, "Edit", new { id=item.Id }) |
+                @Html.ActionLink(Resource.Remove, "Delete", new { id=item.Id })
+            </span>
+        </td>
+        }
+    </tr>
+}
+
+</table>

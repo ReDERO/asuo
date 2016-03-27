@@ -1,0 +1,50 @@
+﻿@using Diploma.Resources
+@using Diploma.Helpers
+@model Diploma.Models.TopicList
+
+@{
+    ViewBag.Title = ViewBag.Subject.Caption + ":" + ViewBag.Topic.Caption;
+}
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+
+@if (ViewBag.AllowActions)
+{
+    
+    <span class="pull-right">
+        <p>
+            @Html.ActionLink(Resource.AddNew, "Create", new { subjectId = ViewBag.Subject.Id, topicId = ViewBag.Topic.Id })
+        </p>
+    </span>
+}
+else
+{
+    <br>
+}
+<table class="table">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-th-list'></span>",
+                            Diploma.Resources.Resource.Subtopics, "Details", "Topics",
+                            new { id = item.Id },
+                            htmlAttributes: new { data_modal = "", @class = "btn btn-warning btn-pencil" })
+                @Html.ActionLink(item.Caption, "Index", "Tasks", new { id = item.Id }, null)
+            </td>
+            @if (ViewBag.AllowActions)
+            {
+            <td>
+                <span class="pull-right">
+                    @Html.ActionLink(Resource.Edit, "Edit", new { id = item.Id }) |
+                    @Html.ActionLink(Resource.Remove, "Delete", new { id = item.Id })
+                </span>
+            </td>
+            }
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,51 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model Diploma.Models.UserProfileViewModel
+
+@{
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    @if (ViewBag.IsMyProfile)
+    {
+        <h4>@Html.ActionLink(Resource.Edit, "Edit", new { id = Model.Id })</h4>
+    }
+    else
+    {
+        <br>
+    }
+    <hr />
+    <div class="form-horizontal">
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div>
+                    <strong>@Diploma.Resources.Resource.Skills</strong>
+                    @if (ViewBag.IsMyProfile)
+                    {
+                        @Html.NoEncodeActionLink("<span class='glyphicon glyphicon-pencil'></span>",
+                                         Diploma.Resources.Resource.Edit, "EditSkills", "Skills",
+                                         new { entity = "user", objectId = Model.Id },
+                                         htmlAttributes: new { data_modal = "", @class = "btn btn-warning pull-right btn-pencil" })
+                    }
+                </div>
+            </div>
+            <table class="table table-hover">
+
+                @foreach (var item in Model.Skills)
+                {
+                    <tr>
+                        <td>
+                            <div class="truncated"><b>@item.Caption</b></div>
+                            <div class="truncated">@item.Description</div>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

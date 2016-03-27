@@ -1,0 +1,29 @@
+﻿@using Diploma.Helpers
+@using Diploma.Resources
+@model IEnumerable<Diploma.Models.SkillListItemExtendedViewModel>
+
+<div data-type="jplist-dataitem" data-format="html" data-count="@ViewBag.Count" class="box">
+    @foreach (var item in Model)
+    {
+        <div class="list-item row">
+            <div class="container">
+                <dl>
+                    <dt><span class="caption">@Html.ActionLink(item.Caption, "Details", new { id = item.Id, returnURL = ViewBag.ReturnURL })</span></dt>
+                    <dd><span class="desc">@item.Description</span></dd>
+                </dl>
+
+                <span class="pull-right">
+                    @if (item.Added)
+                    {
+                        <a href="#" class="btn btn-danger" onclick="request('@Url.Action("RemoveSkill", "Skills", new { entity = ViewBag.Entity, objectId = ViewBag.ObjectId, skillId = item.Id })')">@Resource.Remove</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="btn btn-success" onclick="request('@Url.Action("AddSkill", "Skills", new { entity = ViewBag.Entity, objectId = ViewBag.ObjectId, skillId = item.Id })')">@Resource.Add</a>
+                    }
+                </span>
+
+            </div>
+        </div>
+    }
+</div>

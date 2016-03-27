@@ -1,0 +1,53 @@
+﻿@using Diploma.Resources
+@using Diploma.Helpers
+@model Diploma.Models.TaskDetailsViewModel
+
+@{
+    ViewBag.Title = Model.Caption;
+}
+
+@Html.Breadcrumbs((Diploma.Models.BreadCrumbsModel)ViewBag.BreadCrumbs)
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>
+        @Resource.Author: @Html.ActionLink(Model.Author.FirstName + " " + Model.Author.LastName, "UserProfile", "Account", new { id = Model.Author.Id }, null)
+        @if (ViewBag.AllowActions)
+        {
+            <span class="pull-right additional">
+                @Html.ActionLink(Resource.Edit, "Edit", new { id = Model.Id }) |
+                @Html.ActionLink(Resource.Remove, "Delete", new { id = Model.Id })
+            </span>
+        }
+    </h4>
+    <hr />
+    <p>@Html.Raw(Model.Description.Replace("\n", "<br />"))</p>
+    @if (!String.IsNullOrEmpty(Model.SourceURL) && !String.IsNullOrWhiteSpace(Model.SourceURL))
+    {
+        <p>@Resource.Source: @Model.SourceURL</p>
+    }
+    <div class="container">
+        <div class="row">
+            @if (!ViewBag.IsCompleted)
+            {
+                using (Html.BeginForm("Done", "Tasks", new { id = Model.Id }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="pull-right">
+                        <input type="submit" value="@Resource.Done" class="btn btn-success" />
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="pull-right">
+                    <a href="#" class="btn btn-default" disabled>@Resource.AlreadyDone</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink(Resource.Back, "Index", new { id = Model.TopicId })
+</p>
